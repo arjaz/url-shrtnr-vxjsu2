@@ -27,3 +27,24 @@ spec = do
               short = Text.pack shortenedString
               url = Url.Url origin short
           BT.toList (BT.delete short (BT.singleton url)) `shouldBe` []
+
+  describe "BT.insert && BT.delete && BT.lookup" $ do
+      context "when insert element" $ do
+        prop "should have this element from lookup" $
+          \(pairs, originString, shortenedString) -> do
+            let origin = Text.pack originString
+                short = Text.pack shortenedString
+                url = Url.Url origin short
+                newPairs = map (bimap Text.pack Text.pack) pairs
+                urls = map (uncurry Url.Url) newPairs
+                tree = BT.fromList [(Url.short url', url') | url' <- urls]
+            BT.lookup short (BT.insert url tree) `shouldBe` Just url
+
+      context "when deleting element" $ do
+        prop "shouldn't have this element from lookup" $
+          \(pairs, shortenedString) -> do
+            let short = Text.pack shortenedString
+                newPairs = map (bimap Text.pack Text.pack) pairs
+                urls = map (uncurry Url.Url) newPairs
+                tree = BT.fromList [(Url.short url', url') | url' <- urls]
+            BT.lookup short (BT.delete short tree) `shouldBe` Nothing
