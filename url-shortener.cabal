@@ -145,6 +145,7 @@ test-suite db-test
       Server.Handler.UsersSpec
       Server.Handler.Util
       Server.UtilSpec
+      Tree.TreePropertiesSpec
       Paths_url_shortener
   hs-source-dirs:
       test
